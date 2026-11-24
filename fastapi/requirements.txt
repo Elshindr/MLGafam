@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+joblib
+python-dotenv
+fastapi
+uvicorn
+pydantic
+prometheus-fastapi-instrumentator==6.1.0
+httpx

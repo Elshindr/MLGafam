@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: rncp-models
+
+spec:
+  capacity:
+    storage: 1G
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /home/ubuntu/dst_rncp38919_bloc_3/models
+    type: Directory
+
+  storageClassName:

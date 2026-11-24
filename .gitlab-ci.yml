@@ -1,0 +1,55 @@
+variables:
+  DOCKERHUB_USERNAME: $DOCKERHUB_USER
+  DATA_DIR: $DATA_DIR
+  MODELS_DIR: $MODEL_PATH
+
+stages:
+  - build
+  - run
+  - test
+  - push
+  - deploy
+
+job_build:
+  stage: build
+  tags:
+    - shell
+  script:
+    - echo "Building a Docker image"
+    - ./fastapi/build_image.sh
+
+job_run:
+  stage: run
+  tags:
+    - shell
+  script:
+    - echo "Running rncp-fastapi container"
+    - ./fastapi/run_container.sh
+
+job_test_shell:
+  stage: test
+  tags:
+    - shell
+  script:
+    - echo "Calling hellowork endpoint of rncp-fastapi"
+    - curl "http://localhost:5000/hello"
+
+
+job_push:
+  stage: push
+  tags:
+    - shell
+  script:
+    - echo "Tagging new rncp-fastapi image"
+    - docker tag rncp-fastapi elshindr/rncp-fastapi:$CI_COMMIT_SHORT_SHA
+    - echo "Logging to Docker Hub"
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - echo "Pushing new rncp-fastapi tagged image"
+    - docker push elshindr/rncp-fastapi:$CI_COMMIT_SHORT_SHA
+
+job_deploy:
+  stage: deploy
+  tags: 
+   - shell
+  script:
+   - kubectl rollout restart  deployment/fastapi-dplmt -n rncp

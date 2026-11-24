@@ -1,0 +1,27 @@
+services:
+  prepare-dataframe:
+    build:
+      context: .
+      dockerfile: ./prepare_dataframe/Dockerfile
+    container_name: rncp-prepare-dataframe 
+    environment:
+    - DATA_DIR=${DATA_DIR}
+    volumes:
+      - ../datas/:/app/datas/
+
+  build-model:
+    build:
+      context: .
+      dockerfile: ./build_model/Dockerfile
+    container_name: rncp-build_model
+    depends_on:
+      - prepare-dataframe
+    environment:
+    - DIR_PATH=${DIR_PATH}
+    volumes:
+      - ../models/model.pkl:/app/models/
+      - ../data/:/app/data/
+
+volumes:
+  dir_data:
+  models_data:

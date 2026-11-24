@@ -1,0 +1,9 @@
+venv/
+*.json
+builds
+venv
+data
+__pycache__
+.ipynb_checkpoints
+models
+.env
